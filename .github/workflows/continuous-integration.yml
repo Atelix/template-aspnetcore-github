@@ -33,9 +33,9 @@ jobs:
         with:
           filters: |
             backend:
-              - '**.css'
+              - '**/*.css'
             frontend:
-              - 'NG.Host.Frontend/'
+              - 'NG.Host.Frontend/**'
   
   
   build-backend:
