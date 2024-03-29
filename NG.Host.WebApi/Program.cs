@@ -1,12 +1,7 @@
-using LibraryStore.Abstractions.Logic;
-using LibraryStore.Logic;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddScoped<IBookLogic, BookLogic>();
 
 var app = builder.Build();
 
