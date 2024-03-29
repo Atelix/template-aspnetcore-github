@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG", "NG\NG.csproj", "{E06C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG.Host.WebApi", "NG.Host.WebApi\NG.Host.WebApi.csproj", "{A738215B-C975-4C53-AC28-A253C8579841}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG.UnitTests", "NG.UnitTests\NG.UnitTests.csproj", "{803D7162-7243-4FFD-908C-9EB15C4074AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +36,9 @@ Global
 		{A738215B-C975-4C53-AC28-A253C8579841}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A738215B-C975-4C53-AC28-A253C8579841}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A738215B-C975-4C53-AC28-A253C8579841}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803D7162-7243-4FFD-908C-9EB15C4074AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803D7162-7243-4FFD-908C-9EB15C4074AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803D7162-7243-4FFD-908C-9EB15C4074AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803D7162-7243-4FFD-908C-9EB15C4074AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
