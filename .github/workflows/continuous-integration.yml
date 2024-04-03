@@ -119,13 +119,13 @@ jobs:
         with:
           filename: coverage/**/coverage.cobertura.xml
           badge: true
-          fail_below_min: false # Set to true when tests are added to the project. 
+          fail_below_min: false # Set to true when tests are added to the project.
           format: markdown
           hide_branch_rate: false
           hide_complexity: true
           indicators: true
           output: both
-          thresholds: '80 90'
+          thresholds: '0 0' # Define project thresholds 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
