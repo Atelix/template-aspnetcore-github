@@ -141,7 +141,8 @@ jobs:
         stage: [ "" ]
     steps:
       - uses: actions/checkout@v4
-      - name: Create env file for ${{ matrix.stage }}
+      - if: ${{ (matrix.stage != '') }}
+        name: Create env file for ${{ matrix.stage }}
         run: cp .env.example .env.${{ matrix.stage }}
       - if: ${{ (matrix.stage != '') }}
         name: Build the containers
