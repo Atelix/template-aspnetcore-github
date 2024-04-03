@@ -135,10 +135,11 @@ jobs:
     name: Build Docker
     runs-on: ubuntu-20.04
     needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    if: ${{ matrix.stage != '' }}
     strategy:
       fail-fast: false
       matrix:
-        stage: []
+        stage: [ "" ]
     steps:
       - uses: actions/checkout@v4
       - name: Create env file for ${{ matrix.stage }}
