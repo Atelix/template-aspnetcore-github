@@ -94,8 +94,6 @@ jobs:
         run: pnpm install
       - name: Perform linter
         run: pnpm run lint
-      - name: Perform code formatter
-        run: pnpm run format-code
   
   
   unit-testing:
