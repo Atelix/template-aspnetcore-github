@@ -135,7 +135,7 @@ jobs:
     name: Build Docker
     runs-on: ubuntu-20.04
     needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
-    if: ${{ matrix.stage != '' }}
+    if: ${{ (matrix.stage != '') }}
     strategy:
       fail-fast: false
       matrix:
