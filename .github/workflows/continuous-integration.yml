@@ -138,7 +138,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        stage: [ 'development', 'staging', 'production' ]
+        stage: []
     steps:
       - uses: actions/checkout@v4
       - name: Create env file for ${{ matrix.stage }}
