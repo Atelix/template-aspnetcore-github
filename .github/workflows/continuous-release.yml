@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   integration:
-    uses: .github/workflows/continuous-integration.yml@main
+    uses: ./.github/workflows/continuous-integration.yml@main
   deploy:
     name: Publish images to package registry
     runs-on: ubuntu-20.04
