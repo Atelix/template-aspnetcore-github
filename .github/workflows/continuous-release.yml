@@ -10,6 +10,11 @@ permissions:
 
 jobs:
   integration:
+    permissions: 
+      pull-requests: write
+      actions: read
+      contents: read
+      security-events: write
     uses: ./.github/workflows/continuous-integration.yml
   deploy:
     name: Publish images to package registry
