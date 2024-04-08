@@ -97,6 +97,8 @@ jobs:
   
   unit-testing:
     name: Unit testing
+    permissions: 
+      pull-requests: write
     runs-on: ubuntu-20.04
     needs: [ build-backend ]
     if: ${{ needs.changes.outputs.backend == 'true' }}
