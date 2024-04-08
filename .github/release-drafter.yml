@@ -10,8 +10,13 @@ categories:
       - 'fix'
       - 'bugfix'
       - 'bug'
+  - title: 'Documentation'
+    labels:
+      - 'documentation'
   - title: 'Maintenance'
-    label: 'chore'
+    labels: 
+      - 'chore'
+      - 'dependencies'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&'
 version-resolver:
