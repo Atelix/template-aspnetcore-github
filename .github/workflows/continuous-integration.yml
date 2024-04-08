@@ -33,6 +33,7 @@ jobs:
           filters: |
             backend:
               - '**/*.cs'
+              - '**/*.csproj'
             frontend:
               - 'NG.Host.Frontend/**'
   
