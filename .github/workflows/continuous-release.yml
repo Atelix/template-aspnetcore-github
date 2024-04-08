@@ -9,11 +9,44 @@ permissions:
   contents: read
 
 jobs:
+  integration:
+    uses: .github/workflows/continuous-integration.yml
+  deploy:
+    name: Publish images to package registry
+    runs-on: ubuntu-20.04
+    needs: [ integration ]
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - Api
+          - Frontend
+        include:
+          - image: Api
+            context: .
+            dockerfile: NG.Host.WebApi/Dockerfile
+          - image: Frontend
+            context: ./NG.Host.Frontend/
+            dockerfile: Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+        name: Check out code
+
+      - name: Build and Publish Docker image
+        uses: zvfvrv/docker-bpgpr@1.0.2
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          image_name: ${{ matrix.image }}
+          tags: latest
+          path: ${{ matrix.context }}
+          dockerfile: ${{ matrix.dockerfile }}
+  
   update_release_draft:
     permissions:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
+    needs: [ integration, deploy ]
     steps:
       - name: version
         id: version
