@@ -1,0 +1,174 @@
+name: Continuous integration
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - '**.js'
+      - '**.yml'
+      - '**.cs'
+      - '**.json'
+      - '**.csproj'
+      - '**.ts'
+      - '**.vue'
+      - '**.css'
+      - '**.yaml'
+      - 'Dockerfile'
+
+jobs:
+  changes:
+    name: Change detection
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - '**/*.cs'
+            frontend:
+              - 'NG.Host.Frontend/**'
+  
+  build-backend:
+    name: Build .NET solution
+    runs-on: ubuntu-20.04
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4.0.0
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+  
+  build-frontend:
+    name: Build frontend
+    runs-on: ubuntu-20.04
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    defaults:
+      run:
+        working-directory: NG.Host.Frontend
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'NG.Host.Frontend/pnpm-lock.yaml'
+      - name: Install modules
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+  
+  lint-frontend:
+    name: Lint and format frontend
+    runs-on: ubuntu-20.04
+    needs: [ build-frontend ]
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    defaults:
+      run:
+        working-directory: NG.Host.Frontend
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'NG.Host.Frontend/pnpm-lock.yaml'
+      - name: Install modules
+        run: pnpm install
+      - name: Perform linter
+        run: pnpm run lint
+  
+  
+  unit-testing:
+    name: Unit testing
+    runs-on: ubuntu-20.04
+    needs: [ build-backend ]
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4.0.0
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test with the dotnet CLI
+        run: dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage/**/coverage.cobertura.xml
+          badge: true
+          fail_below_min: false # Set to true when tests are added to the project.
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '90 90'
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+  
+  build-docker-compose:
+    name: Build Docker
+    runs-on: ubuntu-20.04
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    strategy:
+      fail-fast: false
+      matrix:
+        stage: [ "" ]
+    steps:
+      - uses: actions/checkout@v4
+      - if: ${{ (matrix.stage != '') }}
+        name: Create env file for ${{ matrix.stage }}
+        run: cp .env.example .env.${{ matrix.stage }}
+      - if: ${{ (matrix.stage != '') }}
+        name: Build the containers
+        run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
+  
+  code-analysis:
+    name: Code analysis
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript-typescript' ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
