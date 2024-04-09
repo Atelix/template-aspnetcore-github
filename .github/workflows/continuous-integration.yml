@@ -165,3 +165,10 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
+  
+  cleanup:
+    runs-on: ubuntu-20.04
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, code-analysis, build-docker-compose]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
