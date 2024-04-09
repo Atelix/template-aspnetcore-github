@@ -10,43 +10,13 @@ permissions:
 
 jobs:
   integration:
-    permissions: 
+    permissions:
       pull-requests: write
       actions: read
       contents: read
       security-events: write
     uses: ./.github/workflows/continuous-integration.yml
-  deploy:
-    name: Publish images to package registry
-    runs-on: ubuntu-20.04
-    needs: [ integration ]
-    permissions: write-all 
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - Api
-          - Frontend
-        include:
-          - image: Api
-            context: .
-            dockerfile: NG.Host.WebApi/Dockerfile
-          - image: Frontend
-            context: ./NG.Host.Frontend/
-            dockerfile: Dockerfile
-    steps:
-      - uses: actions/checkout@v4
-        name: Check out code
-
-      - name: Build and Publish Docker image
-        uses: zvfvrv/docker-bpgpr@1.0.2
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          image_name: ${{ matrix.image }}
-          tags: latest
-          path: ${{ matrix.context }}
-          dockerfile: ${{ matrix.dockerfile }}
-  
+    
   update_release_draft:
     permissions:
       contents: write
@@ -75,3 +45,36 @@ jobs:
         run: |
           git tag v${{ steps.version.outputs.version }} ${{ steps.version.outputs.tag }} -f
           git push origin refs/tags/v${{ steps.version.outputs.version }} -f
+    outputs: 
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+  deploy:
+    name: Publish images to package registry
+    runs-on: ubuntu-20.04
+    needs: [ integration ]
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - Api
+          - Frontend
+        include:
+          - image: Api
+            context: .
+            dockerfile: NG.Host.WebApi/Dockerfile
+          - image: Frontend
+            context: ./NG.Host.Frontend/
+            dockerfile: Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+        name: Check out code
+
+      - name: Build and Publish Docker image
+        uses: zvfvrv/docker-bpgpr@1.0.2
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          image_name: ${{ matrix.image }}
+          tags: latest, ${{needs.update_release_draft.outputs.tag}}
+          path: ${{ matrix.context }}
+          dockerfile: ${{ matrix.dockerfile }}
