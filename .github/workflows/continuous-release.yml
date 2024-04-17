@@ -45,7 +45,7 @@ jobs:
           git config --global user.name "Github action"
           git add NG.Host.Frontend/package.json
           git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
-          git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
+          git push origin ${{ steps.releaser.outputs.tag_name }} -f
     outputs: 
       tag: ${{ steps.releaser.outputs.tag_name }}
   deploy:
