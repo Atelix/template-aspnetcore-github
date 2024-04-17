@@ -42,6 +42,7 @@ jobs:
       - name: force update major tag
         run: |
           git add NG.Host.Frontend/package.json
+          git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
     outputs: 
       tag: ${{ steps.releaser.outputs.tag_name }}
