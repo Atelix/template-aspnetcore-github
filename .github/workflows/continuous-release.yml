@@ -38,14 +38,14 @@ jobs:
       - name: Set version
         run: |
           cd NG.Host.Frontend
-          npm version ${{ steps.releaser.output.tag_name }} --git-tag-version false -f --allow-same-version true
+          npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
       - name: force update major tag
         run: |
-          git tag ${{ steps.releaser.output.tag_name }} ${{ steps.releaser.output.tag_name }} -f
+          git tag ${{ steps.releaser.outputs.tag_name }} ${{ steps.releaser.outputs.tag_name }} -f
           git add NG.Host.Frontend/package.json
-          git push origin refs/tags/${{ steps.releaser.output.tag_name }} -f
+          git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
     outputs: 
-      tag: ${{ steps.releaser.output.tag_name }}
+      tag: ${{ steps.releaser.outputs.tag_name }}
   deploy:
     name: Publish images to package registry
     runs-on: ubuntu-20.04
