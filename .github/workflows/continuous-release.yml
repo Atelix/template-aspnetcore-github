@@ -41,7 +41,8 @@ jobs:
           npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
       - name: force update major tag
         run: |
-          git commit --allow-empty --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "Github action"
           git add NG.Host.Frontend/package.json
           git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
