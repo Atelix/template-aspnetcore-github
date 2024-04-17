@@ -9,13 +9,13 @@ permissions:
   contents: read
 
 jobs:
-  integration:
-    permissions:
-      pull-requests: write
-      actions: read
-      contents: read
-      security-events: write
-    uses: ./.github/workflows/continuous-integration.yml
+#  integration:
+#    permissions:
+#      pull-requests: write
+#      actions: read
+#      contents: read
+#      security-events: write
+#    uses: ./.github/workflows/continuous-integration.yml
     
   update_release_draft:
     permissions:
@@ -41,7 +41,7 @@ jobs:
           npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
       - name: force update major tag
         run: |
-          git tag ${{ steps.releaser.outputs.tag_name }} ${{ steps.releaser.outputs.tag_name }} -f
+#          git tag ${{ steps.releaser.outputs.tag_name }} ${{ steps.releaser.outputs.tag_name }} -f
           git add NG.Host.Frontend/package.json
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
     outputs: 
