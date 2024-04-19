@@ -1,23 +1,51 @@
 ﻿name: Continuous Release
 
 on:
-#  schedule:
-#    - cron: '0 0 * * *'
-  workflow_dispatch: 
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  change-validation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          current_commit=$(git rev-parse HEAD)
+          
+          
+          if [ -z "$latest_tag" ]; then
+            echo "No tags found. Assuming initial release."
+            echo "CHANGES=True" >> $GITHUB_OUTPUT
+          else
+            changes=$(git log --oneline $latest_tag..HEAD)
+            if [ -n "$changes" ]; then
+              echo "There are new changes for a new release."
+              echo "Last tag: $latest_tag"
+              echo "Current commit: $current_commit"
+              echo "CHANGES=True" >> $GITHUB_OUTPUT
+            else
+              echo "No new changes found since the last tag: $latest_tag"
+              echo "CHANGES=False" >> $GITHUB_OUTPUT
+            fi
+          fi
   integration:
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       pull-requests: write
       actions: read
       contents: read
       security-events: write
     uses: ./.github/workflows/continuous-integration.yml
-    
+  
   update_release_draft:
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       contents: write
       pull-requests: write
@@ -47,9 +75,10 @@ jobs:
           git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
           git tag ${{ steps.releaser.outputs.tag_name }} -f
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
-    outputs: 
+    outputs:
       tag: ${{ steps.releaser.outputs.tag_name }}
   deploy:
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     name: Publish images to package registry
     runs-on: ubuntu-20.04
     needs: [ integration, update_release_draft ]
