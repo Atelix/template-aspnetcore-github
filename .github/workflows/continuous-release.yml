@@ -15,6 +15,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - run: git fetch --prune --unshallow --tags
       - run: |
           latest_tag=$(git describe --tags --abbrev=0)
           current_commit=$(git rev-parse HEAD)
