@@ -50,7 +50,8 @@ jobs:
       security-events: write
     uses: ./.github/workflows/continuous-integration.yml
   
-  update_release_draft:
+  create-release:
+    name: Create release
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       contents: write
@@ -111,6 +112,6 @@ jobs:
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           image_name: ${{ matrix.image }}
-          tags: latest, ${{needs.update_release_draft.outputs.tag}}
+          tags: latest, ${{needs.create-release.outputs.tag}}
           path: ${{ matrix.context }}
           dockerfile: ${{ matrix.dockerfile }}
