@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          latest_tag=$(git describe --tags --abbrev=0 --always)
+          latest_tag=$(git describe --tags --abbrev=0)
           current_commit=$(git rev-parse HEAD)
           
           
