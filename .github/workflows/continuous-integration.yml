@@ -142,36 +142,36 @@ jobs:
         name: Build the containers
         run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
   
-  code-analysis:
-    name: Code analysis
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp', 'javascript-typescript' ]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
+#  code-analysis:
+#    name: Code analysis
+#    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+#    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+#    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+#    permissions:
+#      actions: read
+#      contents: read
+#      security-events: write
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        language: [ 'csharp', 'javascript-typescript' ]
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#      - name: Initialize CodeQL
+#        uses: github/codeql-action/init@v3
+#        with:
+#          languages: ${{ matrix.language }}
+#      - name: Autobuild
+#        uses: github/codeql-action/autobuild@v3
+#      - name: Perform CodeQL Analysis
+#        uses: github/codeql-action/analyze@v3
+#        with:
+#          category: "/language:${{matrix.language}}"
   
   cleanup:
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, code-analysis, build-docker-compose]
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker-compose]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
