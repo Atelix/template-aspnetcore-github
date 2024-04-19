@@ -6,27 +6,27 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   # Maintain dependencies of nuget packages
   - package-ecosystem: "nuget"
     directory: "/"
     target-branch: "main"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   # Maintain dependencies for javascript
   - package-ecosystem: "npm"
     directory: "/NG.Host.Frontend"
     target-branch: "main"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   # Maintain dependencies for docker images
   - package-ecosystem: "docker"
     directory: "/NG.Host.Frontend"
     target-branch: "main"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   - package-ecosystem: "docker"
     directory: "/NG.Host.WebApi"
     target-branch: "main"
     schedule:
-      interval: "daily"
+      interval: "weekly"
