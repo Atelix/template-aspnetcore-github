@@ -16,26 +16,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: git fetch --prune --unshallow --tags
-      - run: |
+      - name: Check for changes
+        id: check
+        run: |
           latest_tag=$(git describe --tags --abbrev=0)
           current_commit=$(git rev-parse HEAD)
           
           
           if [ -z "$latest_tag" ]; then
             echo "No tags found. Assuming initial release."
-            echo "CHANGES=True" >> $GITHUB_OUTPUT
+            echo "CHANGES=True" >> "$GITHUB_OUTPUT"
           else
             changes=$(git log --oneline $latest_tag..HEAD)
             if [ -n "$changes" ]; then
               echo "There are new changes for a new release."
               echo "Last tag: $latest_tag"
               echo "Current commit: $current_commit"
-              echo "CHANGES=True" >> $GITHUB_OUTPUT
+              echo "CHANGES=True" >> "$GITHUB_OUTPUT"
             else
               echo "No new changes found since the last tag: $latest_tag"
-              echo "CHANGES=False" >> $GITHUB_OUTPUT
+              echo "CHANGES=False" >> "$GITHUB_OUTPUT"
             fi
           fi
+    outputs: 
+      CHANGES: ${{ steps.check.outputs.CHANGES }}
   integration:
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     needs: [ change-validation ]
