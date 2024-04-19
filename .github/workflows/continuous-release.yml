@@ -7,6 +7,10 @@ on:
 
 permissions:
   contents: read
+  
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   change-validation:
@@ -128,6 +132,5 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           file: ${{ matrix.dockerfile }}
-          tags: |
-            ${{ matrix.image }}:latest
-            ${{ matrix.image }}:${{needs.create-release.outputs.tag}}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
