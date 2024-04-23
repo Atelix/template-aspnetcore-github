@@ -101,13 +101,13 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - Api
-          - Frontend
+          - api
+          - frontend
         include:
-          - image: Api
+          - image: api
             context: .
             dockerfile: ./NG.Host.WebApi/Dockerfile
-          - image: Frontend
+          - image: frontend
             context: ./NG.Host.Frontend
             dockerfile: ./NG.Host.Frontend/Dockerfile
     steps:
