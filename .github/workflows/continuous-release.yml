@@ -113,6 +113,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Check out code
+      - id: lower-repo
+        shell: pwsh
+        run: |
+          "::set-output name=repository::$($env:GITHUB_REPOSITORY.ToLowerInvariant())"
       - name: downcase REPO
         run: |
           echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
@@ -127,8 +131,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{REPO}}
-
+          images: ${{ env.REGISTRY }}/${{ steps.lower-repo.outputs.repository }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -136,6 +139,6 @@ jobs:
           push: true
           file: ${{ matrix.dockerfile }}
           tags: |
-            ${{ env.REGISTRY }}/${{REPO}}/${{ matrix.image }}:${{ needs.create-release.outputs.tag }}
-            ${{ env.REGISTRY }}/${{REPO}}/${{ matrix.image }}:latest
+            ${{ env.REGISTRY }}/${{ steps.lower-repo.outputs.repository }}/${{ matrix.image }}:${{ needs.create-release.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ steps.lower-repo.outputs.repository }}/${{ matrix.image }}:latest
           labels: ${{ steps.meta.outputs.labels }}
