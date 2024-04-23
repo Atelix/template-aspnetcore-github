@@ -23,7 +23,8 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          latest_tag=$(git describe --tags --abbrev=0)
+          latest_tag=$(git for-each-ref --sort=-taggerdate --format '%(refname:short)' refs/tags | head -n 1)
+          tag=${latest_tag:-}
           current_commit=$(git rev-parse HEAD)
           
           
@@ -31,7 +32,7 @@ jobs:
             echo "No tags found. Assuming initial release."
             echo "CHANGES=True" >> "$GITHUB_OUTPUT"
           else
-            changes=$(git log --oneline $latest_tag..HEAD)
+            changes=$(git log --oneline $tag..HEAD)
             if [ -n "$changes" ]; then
               echo "There are new changes for a new release."
               echo "Last tag: $latest_tag"
@@ -105,10 +106,10 @@ jobs:
         include:
           - image: Api
             context: .
-            dockerfile: NG.Host.WebApi/Dockerfile
+            dockerfile: ./NG.Host.WebApi/Dockerfile
           - image: Frontend
-            context: ./NG.Host.Frontend/
-            dockerfile: Dockerfile
+            context: ./NG.Host.Frontend
+            dockerfile: ./NG.Host.Frontend/Dockerfile
     steps:
       - uses: actions/checkout@v4
         name: Check out code
@@ -124,7 +125,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -132,5 +133,7 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           file: ${{ matrix.dockerfile }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.create-release.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
