@@ -22,7 +22,7 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          echo "CHANGES=$(gh release list --repo owner/repository --draft --limit 1 > /dev/null 2>&1 && echo "true" || echo "false"" >>${GITHUB_ENV}
+          echo "CHANGES=$(gh release list --repo owner/repository --draft --limit 1 > /dev/null 2>&1 && echo 'true' || echo 'false'" >>${GITHUB_ENV}
     outputs: 
       CHANGES: ${{ steps.check.outputs.CHANGES }}
   integration:
