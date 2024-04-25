@@ -35,8 +35,8 @@ jobs:
       security-events: write
     uses: ./.github/workflows/continuous-integration.yml
   
-  publich-release:
-    name: Create release
+  publish-release:
+    name: publish release
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       contents: write
@@ -75,7 +75,7 @@ jobs:
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     name: Publish images to package registry
     runs-on: ubuntu-20.04
-    needs: [ change-validation, integration, create-release ]
+    needs: [ change-validation, integration, publish-release ]
     permissions: write-all
     strategy:
       fail-fast: false
