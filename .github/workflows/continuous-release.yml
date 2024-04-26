@@ -16,6 +16,11 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Get release
+        id: get_release
+        uses: agners/get-draft-release@v0.1.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
       - uses: actions/checkout@v4
@@ -29,6 +34,7 @@ jobs:
           echo $releases
           draft_release_exists=$(echo "$releases" | jq 'map(select(.isDraft)) | length > 0')
           echo $draft_release_exists
+          echo ${{ steps.get_release.outputs.tag_name }}
           echo "draft_release_exists=$draft_release_exists" >> ${GITHUB_ENV}
     outputs: 
       CHANGES: ${{ steps.check.outputs.draft_release_exists }}
