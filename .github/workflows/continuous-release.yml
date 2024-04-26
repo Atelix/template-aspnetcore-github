@@ -9,7 +9,6 @@ permissions: write-all
   
 env:
   REGISTRY: ghcr.io
-  GH_TOKEN: ${{ github.token }}
 
 jobs:
   change-validation:
@@ -22,6 +21,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check for changes
         id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           releases=$(gh release list --json isDraft,name)
           echo $releases
