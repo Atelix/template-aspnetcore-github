@@ -22,7 +22,7 @@ jobs:
         id: check
         run: |
           result=$(gh release list --repo ${{ github.repository }} --draft --limit 1 > /dev/null 2>&1 && echo "True" || echo "False")
-          echo "::set-output name=draft_release_exists::$result"
+          echo "draft_release_exists=$result" >> ${GITHUB_ENV}
     outputs: 
       CHANGES: ${{ steps.check.outputs.draft_release_exists }}
   integration:
@@ -96,7 +96,7 @@ jobs:
       - id: lower-repo
         shell: pwsh
         run: |
-          "::set-output name=repository::$($env:GITHUB_REPOSITORY.ToLowerInvariant())"
+          echo "repository=$($env:GITHUB_REPOSITORY.ToLowerInvariant())" >> ${GITHUB_ENV}
       - name: downcase REPO
         run: |
           echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
