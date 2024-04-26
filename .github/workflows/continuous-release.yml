@@ -26,7 +26,7 @@ jobs:
         run: |
           releases=$(gh release list --repo ${{ github.repository }} --json isDraft,name -q map(select(.isDraft)))
           echo $releases
-          draft_release_exists=$(echo "$releases" | jq 'length > 0')
+          draft_release_exists=$(echo "$releases" | jq 'map(select(.isDraft)) | length > 0')
           echo $draft_release_exists
           echo "draft_release_exists=$draft_release_exists" >> ${GITHUB_ENV}
     outputs: 
