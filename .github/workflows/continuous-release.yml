@@ -10,7 +10,6 @@ permissions:
   
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   change-validation:
@@ -22,9 +21,10 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          echo "CHANGES=$(gh release list --repo owner/repository --draft --limit 1 > /dev/null 2>&1 && echo 'true' || echo 'false'" >>${GITHUB_ENV}
+          result=$(gh release list --repo ${{ github.repository }} --draft --limit 1 > /dev/null 2>&1 && echo "true" || echo "false")
+          echo "::set-output name=draft_release_exists::$result"
     outputs: 
-      CHANGES: ${{ steps.check.outputs.CHANGES }}
+      CHANGES: ${{ steps.check.outputs.draft_release_exists }}
   integration:
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     needs: [ change-validation ]
