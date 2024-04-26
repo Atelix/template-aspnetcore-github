@@ -24,8 +24,7 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          releases=$(gh release list --repo ${{ github.repository }} --json name,isDraft --limit 1)
-          releases=gh release list --repo ${{ github.repository }} --json isDraft,name -q map(select(.isDraft))
+          releases=$(gh release list --repo ${{ github.repository }} --json isDraft,name -q map(select(.isDraft)))
           echo $releases
           draft_release_exists=$(echo "$releases" | jq 'length > 0')
           echo $draft_release_exists
