@@ -21,7 +21,7 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          result=$(gh release list --repo ${{ github.repository }} --draft --limit 1 > /dev/null 2>&1 && echo "true" || echo "false")
+          result=$(gh release list --repo ${{ github.repository }} --draft --limit 1 > /dev/null 2>&1 && echo "True" || echo "False")
           echo "::set-output name=draft_release_exists::$result"
     outputs: 
       CHANGES: ${{ steps.check.outputs.draft_release_exists }}
