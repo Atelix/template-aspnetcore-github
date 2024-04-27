@@ -103,7 +103,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Check out code
-        run: |
+      - run: |
           echo "repository=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
           echo ${{env.repository}}
       - name: Log in to the Container registry
