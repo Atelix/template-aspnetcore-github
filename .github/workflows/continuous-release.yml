@@ -20,6 +20,8 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Get latest release
         id: latest_release
         run: echo "LATEST_RELEASE=$(gh release list -q="map(select(.isLatest))[0]?.tagName" --json tagName,isLatest)" >> $GITHUB_ENV
