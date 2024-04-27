@@ -26,9 +26,13 @@ jobs:
       - name: Changes with main
         run: |
           git fetch origin main
-          git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
-          echo "CHANGES_FOUND=$([ -s CHANGES ])" >> $GITHUB_ENV
-          echo "Changes: ${{ env.CHANGES_FOUND }}"
+           git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
+           echo $CHANGES
+           if [ -s CHANGES ]; then
+             echo "CHANGES_FOUND=True" >> $GITHUB_ENV
+           else
+             echo "CHANGES_FOUND=False" >> $GITHUB_ENV
+           fi
     outputs: 
       CHANGES: ${{ env.CHANGES_FOUND }}
   integration:
