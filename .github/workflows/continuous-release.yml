@@ -17,8 +17,6 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -29,16 +27,9 @@ jobs:
         run: |
           git fetch origin main
           git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
-          echo $CHANGES
-          if [ -s CHANGES ]; then
-            echo "CHANGES_FOUND=True" >> $GITHUB_ENV
-          else
-            echo "CHANGES_FOUND=False" >> $GITHUB_ENV
-          fi
-    outputs: 
-      CHANGES: ${{ env.CHANGES_FOUND }}
+          echo "CHANGES_FOUND=$([ -s CHANGES ])" >> $GITHUB_ENV
   integration:
-    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    if: ${{ env.CHANGES_FOUND }}
     needs: [ change-validation ]
     permissions:
       pull-requests: write
@@ -49,7 +40,7 @@ jobs:
   
   publish-release:
     name: publish release
-    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    if: ${{ env.CHANGES_FOUND }}
     permissions:
       contents: write
       pull-requests: write
@@ -84,7 +75,7 @@ jobs:
       
       
   deploy:
-    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    if: ${{ env.CHANGES_FOUND }}
     name: Publish images to package registry
     runs-on: ubuntu-20.04
     needs: [ change-validation, integration, publish-release ]
