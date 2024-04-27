@@ -25,9 +25,9 @@ jobs:
         run: echo "LATEST_RELEASE=$(gh release list -q="map(select(.isLatest))[0]?.tagName" --json tagName,isLatest)" >> $GITHUB_ENV
       - name: Changes with main
         run: |
-          echo ${{ LATEST_RELEASE }}
+          echo ${{ steps.latest_release.outputs.LATEST_RELEASE }}
           git fetch origin main
-          git diff --name-only ${{ LATEST_RELEASE }}...HEAD > CHANGES
+          git diff --name-only ${{ steps.latest_release.outputs.LATEST_RELEASE }}...HEAD > CHANGES
           echo $CHANGES
           if [ -s CHANGES ]; then
             echo "True" > CHANGES
