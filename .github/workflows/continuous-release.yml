@@ -28,8 +28,10 @@ jobs:
           git fetch origin main
           git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
           echo "CHANGES_FOUND=$([ -s CHANGES ])" >> $GITHUB_ENV
+    outputs: 
+      CHANGES: ${{ env.CHANGES_FOUND }}
   integration:
-    if: ${{ env.CHANGES_FOUND }}
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     needs: [ change-validation ]
     permissions:
       pull-requests: write
@@ -40,7 +42,7 @@ jobs:
   
   publish-release:
     name: publish release
-    if: ${{ env.CHANGES_FOUND }}
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       contents: write
       pull-requests: write
@@ -75,7 +77,7 @@ jobs:
       
       
   deploy:
-    if: ${{ env.CHANGES_FOUND }}
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     name: Publish images to package registry
     runs-on: ubuntu-20.04
     needs: [ change-validation, integration, publish-release ]
