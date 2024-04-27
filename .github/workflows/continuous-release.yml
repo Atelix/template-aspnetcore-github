@@ -9,6 +9,7 @@ permissions: write-all
   
 env:
   REGISTRY: ghcr.io
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   change-validation:
