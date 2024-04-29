@@ -13,6 +13,7 @@ env:
 
 jobs:
   change-validation:
+    name: Validate changes for new release
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,6 +38,7 @@ jobs:
       CHANGES: ${{ env.CHANGES_FOUND }}
   integration:
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    name: Continuous Integration 
     needs: [ change-validation ]
     permissions:
       pull-requests: write
@@ -46,7 +48,7 @@ jobs:
     uses: ./.github/workflows/continuous-integration.yml
   
   publish-release:
-    name: publish release
+    name: Publish release
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     permissions:
       contents: write
@@ -120,6 +122,6 @@ jobs:
           push: true
           file: ${{ matrix.dockerfile }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:${{ needs.create-release.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:${{ needs.publish-release.outputs.tag }}
             ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:latest
           labels: ${{ steps.meta.outputs.labels }}
