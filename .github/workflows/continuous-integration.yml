@@ -90,7 +90,7 @@ jobs:
   lint-frontend:
     name: Lint and format frontend
     runs-on: ubuntu-20.04
-    needs: [ build-frontend ]
+    needs: [ build-frontend, config ]
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:

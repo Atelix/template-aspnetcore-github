@@ -2,9 +2,9 @@
 docker:
   - image:  api
     context: .
-    file: ./Dockerfile
+    file: ./NG.Host.WebApi/Dockerfile
   - image: frontend
     context: ./NG.Host.Frontend
-    file: ./Dockerfile  
+    file: ./NG.Host.Frontend/Dockerfile  
 
   
