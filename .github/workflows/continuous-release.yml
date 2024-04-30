@@ -69,13 +69,13 @@ jobs:
           node-version: 20
       - name: Set version
         run: |
-          cd NG.Host.Frontend
+          cd ${{needs.intergation.outputs.frontend}}
           npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
       - name: force update major tag
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "Github action"
-          git add NG.Host.Frontend/package.json
+          git add ${{needs.intergation.outputs.frontend}}/package.json
           git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
           git tag ${{ steps.releaser.outputs.tag_name }} -f
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
@@ -92,16 +92,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image:
-          - api
-          - frontend
-        include:
-          - image: api
-            context: .
-            dockerfile: ./NG.Host.WebApi/Dockerfile
-          - image: frontend
-            context: ./NG.Host.Frontend
-            dockerfile: ./NG.Host.Frontend/Dockerfile
+        include: ${{fromJson(needs.integration.outputs.docker)}}
+          
     steps:
       - uses: actions/checkout@v4
         name: Check out code
