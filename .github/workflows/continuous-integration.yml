@@ -19,16 +19,16 @@ jobs:
         id: load-package-json-location
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.package.json-location' .github/CICD-Config.yml
+          cmd: yq '.package.json-location' ./.github/CICD-Config.yml
       - name: Load docker configuration
         id: load-docker-config
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.package.json-location' .github/CICD-Config.yml
+          cmd: yq '.package.json-location' ./.github/CICD-Config.yml
       - run: echo ${{ steps.load-package-json-location.outputs.result }}
       - run: echo ${{ steps.load-docker-config.outputs.result }}
   changes:
-    name: Load settings & Change detection
+    name: Change detection
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
