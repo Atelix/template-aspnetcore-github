@@ -19,7 +19,7 @@ jobs:
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq e .github/CICD-Config.yml -j
-      - run: echo ${{ steps.config.outputs.result }}
+      - run: echo ${{ steps.config.outputs.result['frontend-location'] }}
   changes:
     name: Change detection
     runs-on: ubuntu-latest
