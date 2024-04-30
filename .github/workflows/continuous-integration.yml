@@ -20,13 +20,13 @@ jobs:
         id: docker
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.docker | .. style="single"' .github/CICD-Config.yml -o=json
+          cmd: yq '.docker' .github/CICD-Config.yml -o=json
       - run: echo "Docker configuration ${{ steps.docker.outputs.result }}"
       - name: Load frontend configuration
         id: frontend
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.frontend-location | .. style="single"' .github/CICD-Config.yml -o=json
+          cmd: yq '.frontend-location' .github/CICD-Config.yml
       - run: echo "Frontend configuration ${{ steps.frontend.outputs.result }}"
   changes:
     name: Change detection
