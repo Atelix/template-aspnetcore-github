@@ -1,0 +1,10 @@
+﻿package.json-location: ./NG.Host.Frontend/package.json
+docker:
+  api:
+    context: .
+    File: ./Dockerfile
+  frontend:
+    context: ./NG.Host.Frontend
+    File: ./Dockerfile  
+
+  
