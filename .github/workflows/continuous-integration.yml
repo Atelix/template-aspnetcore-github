@@ -73,7 +73,7 @@ jobs:
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
-        working-directory: ${{ needs.config.outputs.frontend}}
+        working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -94,7 +94,7 @@ jobs:
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
-        working-directory: ${{ needs.config.outputs.frontend }}
+        working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -150,7 +150,7 @@ jobs:
   build-docker:
     name: Build Docker
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    needs: [ config, changes ]
     strategy:
       fail-fast: false
       matrix:
