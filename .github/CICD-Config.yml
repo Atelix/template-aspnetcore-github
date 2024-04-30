@@ -1,4 +1,4 @@
-﻿package.json-location: ./NG.Host.Frontend/package.json
+﻿frontend-location: ./NG.Host.Frontend
 docker:
   api:
     context: .

@@ -12,21 +12,14 @@ jobs:
     name: Load settings
     runs-on: ubuntu-latest
     outputs:
-      package-json-location: ${{ steps.load-package-json-location.outputs.result }}
-      docker-config: ${{ steps.load-docker-config.outputs.result }}
+      data: ${{ steps.config.outputs.result }}
     steps:
-      - name: Load package.json location
-        id: load-package-json-location
-        uses: mikefarah/yq@v4.43.1
-        with:
-          cmd: yq '.package.json-location' /.github/CICD-Config.yml
       - name: Load docker configuration
-        id: load-docker-config
+        id: config
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.package.json-location' /.github/CICD-Config.yml
-      - run: echo ${{ steps.load-package-json-location.outputs.result }}
-      - run: echo ${{ steps.load-docker-config.outputs.result }}
+          cmd: yq e .github/CICD-Config.yml -j
+      - run: echo ${{ steps.config.outputs.result }}
   changes:
     name: Change detection
     runs-on: ubuntu-latest
