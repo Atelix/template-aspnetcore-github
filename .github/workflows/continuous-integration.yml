@@ -27,7 +27,7 @@ jobs:
           cmd: yq '.package.json-location' .github/CICD-Config.yml
       - run: echo ${{ steps.load-package-json-location.outputs.result }}
       - run: echo ${{ steps.load-docker-config.outputs.result }}
-  chnages:
+  changes:
     name: Load settings & Change detection
     runs-on: ubuntu-latest
     permissions:
