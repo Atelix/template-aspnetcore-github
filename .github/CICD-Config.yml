@@ -1,9 +1,9 @@
 ﻿frontend-location: ./NG.Host.Frontend
 docker:
-  api:
+  - image:  api
     context: .
     File: ./Dockerfile
-  frontend:
+  - image: frontend
     context: ./NG.Host.Frontend
     File: ./Dockerfile  
 

@@ -10,21 +10,27 @@ on:
 jobs:
   config:
     name: Load settings
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
-      data: ${{ steps.config.outputs.result }}
+      docker: ${{ steps.docker.outputs.result }}
+      frontend: ${{ steps.frontend.outputs.result }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Load docker configuration
-        id: config
+        id: docker
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '' .github/CICD-Config.yml -o=json
-      - run: echo ${{ steps.config.outputs.result.frontend-location }}
-      - run: echo ${{ steps.config.outputs.result }}
+          cmd: yq '.docker' .github/CICD-Config.yml -o=json
+      - run: echo "Docker configuration ${{ steps.docker.outputs.result }}"
+      - name: Load frontend configuration
+        id: frontend
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq '.frontend-location' .github/CICD-Config.yml -o=json
+      - run: echo "Frontend configuration ${{ steps.docker.outputs.result }}"
   changes:
     name: Change detection
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     permissions:
       pull-requests: read
       contents: read
