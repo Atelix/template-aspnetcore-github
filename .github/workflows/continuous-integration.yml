@@ -194,7 +194,7 @@ jobs:
   
   cleanup:
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker-compose ]
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
