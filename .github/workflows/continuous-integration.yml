@@ -14,6 +14,7 @@ jobs:
     outputs:
       data: ${{ steps.config.outputs.result }}
     steps:
+      - uses: actions/checkout@v3
       - name: Load docker configuration
         id: config
         uses: mikefarah/yq@v4.43.1
