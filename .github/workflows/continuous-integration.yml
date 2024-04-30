@@ -48,7 +48,7 @@ jobs:
               - '**/*.cs'
               - '**/*.csproj'
             frontend:
-              - 'NG.Host.Frontend/**'
+              - '${{ needs.config.outputs.frontend}}/**'
   
   build-backend:
     name: Build .NET solution
@@ -72,7 +72,7 @@ jobs:
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
-        working-directory: NG.Host.Frontend
+        working-directory: ${{ needs.config.outputs.frontend}}
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -80,7 +80,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: 'NG.Host.Frontend/pnpm-lock.yaml'
+          cache-dependency-path: '${{ needs.config.outputs.frontend}}/pnpm-lock.yaml'
       - name: Install modules
         run: pnpm install
       - name: Build
@@ -93,7 +93,7 @@ jobs:
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
-        working-directory: NG.Host.Frontend
+        working-directory: ${{ needs.config.outputs.frontend}}
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -101,7 +101,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: 'NG.Host.Frontend/pnpm-lock.yaml'
+          cache-dependency-path: '${{ needs.config.outputs.frontend}}/pnpm-lock.yaml'
       - name: Install modules
         run: pnpm install
       - name: Perform linter
@@ -153,15 +153,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        stage: [ "" ]
+        include: ${{fromJson(needs.config.outputs.docker)}}
     steps:
       - uses: actions/checkout@v4
-      - if: ${{ (matrix.stage != '') }}
-        name: Create env file for ${{ matrix.stage }}
-        run: cp .env.example .env.${{ matrix.stage }}
-      - if: ${{ (matrix.stage != '') }}
-        name: Build the containers
-        run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          push: false
+          file: ${{ matrix.file }}
+        
   
 #  code-analysis:
 #    name: Code analysis
