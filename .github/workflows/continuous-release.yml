@@ -59,6 +59,7 @@ jobs:
       - uses: release-drafter/release-drafter@v6.0.0
         id: releaser
         with:
+          prerelease-identifier: 'beta'
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
