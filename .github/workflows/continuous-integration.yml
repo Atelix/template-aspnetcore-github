@@ -211,6 +211,7 @@ jobs:
   
   cleanup:
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker, code-analysis ]
     steps:
       - name: Checkout repository

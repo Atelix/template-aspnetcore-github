@@ -1,4 +1,9 @@
-﻿frontend-location: NG.Host.Frontend
+﻿# Define the directory where frontend code is located for linting and testing
+frontend-location: NG.Host.Frontend
+# Define all docker images that should be tested and published. 
+# context: is the context that will be used while building the image
+# file: is the path to the Dockerfile that will be used to build the image
+# image: is the name of the image that will be used to tag the image
 docker:
   - image:  api
     context: .
@@ -6,4 +11,7 @@ docker:
   - image: frontend
     context: ./NG.Host.Frontend
     file: ./NG.Host.Frontend/Dockerfile  
+
+# False means that the code analysis will not be performed
+# Otherwise give a list of languages to be analyzed according to Github CodeQl documentation 
 code-analysis-languages: false
