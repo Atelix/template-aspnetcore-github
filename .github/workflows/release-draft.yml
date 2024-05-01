@@ -16,6 +16,9 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Release type
         id: release_type
@@ -25,6 +28,4 @@ jobs:
         with:
           prerelease-identifier: 'beta'
           prerelease: ${{ env.IS_PRERELEASE == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo ${{ env.IS_PRERELEASE }}
