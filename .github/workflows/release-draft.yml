@@ -24,9 +24,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Release type
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
         id: release_type
         run: |
           echo "IS_PRERELEASE=$(gh pr view ${{ github.head_ref }}  --json='labels' -q='any(.labels[]; .name == \"beta\")')" >> $GITHUB_ENV
