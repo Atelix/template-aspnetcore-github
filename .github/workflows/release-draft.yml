@@ -31,4 +31,3 @@ jobs:
         with:
           prerelease-identifier: 'beta'
           prerelease: ${{ env.IS_PRERELEASE == 'true' }}
-      - run: echo ${{ env.IS_PRERELEASE }}
