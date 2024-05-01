@@ -162,6 +162,7 @@ jobs:
   
   build-docker:
     name: Build Docker
+    if: ${{ needs.config.outputs.docker != null }}
     runs-on: ubuntu-20.04
     needs: [ config, changes ]
     strategy:
