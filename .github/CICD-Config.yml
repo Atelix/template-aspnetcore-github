@@ -7,6 +7,4 @@ docker:
     context: ./NG.Host.Frontend
     file: ./NG.Host.Frontend/Dockerfile  
 code-analysis-languages:
-  
-
-  
+  -
