@@ -5,9 +5,9 @@ concurrency:
 on:
   workflow_call:
     outputs:
-      docker: 
+      docker:
         value: ${{jobs.config.outputs.docker}}
-      frontend: 
+      frontend:
         value: ${{jobs.config.outputs.frontend}}
   pull_request:
   workflow_dispatch:
@@ -19,6 +19,7 @@ jobs:
     outputs:
       docker: ${{ steps.docker.outputs.result }}
       frontend: ${{ steps.frontend.outputs.result }}
+      code-analysis: ${{ steps.analysis.outputs.result }}
     steps:
       - uses: actions/checkout@v4
       - name: Load docker configuration
@@ -27,6 +28,13 @@ jobs:
         with:
           cmd: yq '.docker' .github/CICD-Config.yml -o=json
       - run: echo "Docker configuration ${{ steps.docker.outputs.result }}"
+      - uses: actions/checkout@v4
+      - name: Load Code analysis configuration
+        id: analysis
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq '.code-analysis-languages' .github/CICD-Config.yml -o=json
+      - run: echo "Code analysis configuration ${{ steps.analysis.outputs.result }}"
       - name: Load frontend configuration
         id: frontend
         uses: mikefarah/yq@v4.43.1
@@ -170,36 +178,39 @@ jobs:
           file: ${{ matrix.file }}
   
   
-  #  code-analysis:
-  #    name: Code analysis
-  #    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
-  #    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-  #    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
-  #    permissions:
-  #      actions: read
-  #      contents: read
-  #      security-events: write
-  #    strategy:
-  #      fail-fast: false
-  #      matrix:
-  #        language: [ 'csharp', 'javascript-typescript' ]
-  #    steps:
-  #      - name: Checkout repository
-  #        uses: actions/checkout@v4
-  #      - name: Initialize CodeQL
-  #        uses: github/codeql-action/init@v3
-  #        with:
-  #          languages: ${{ matrix.language }}
-  #      - name: Autobuild
-  #        uses: github/codeql-action/autobuild@v3
-  #      - name: Perform CodeQL Analysis
-  #        uses: github/codeql-action/analyze@v3
-  #        with:
-  #          category: "/language:${{matrix.language}}"
+  code-analysis:
+    name: Code analysis
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ${{fromJson(needs.config.outputs.code-analysis)}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        if: ${{ matrix.language != '' }}
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+        if: ${{ matrix.language != '' }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        if: ${{ matrix.language != '' }}
+        with:
+          category: "/language:${{matrix.language}}"
   
   cleanup:
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker ]
+    needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker, code-analysis ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
