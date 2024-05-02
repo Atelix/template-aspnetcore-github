@@ -56,11 +56,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ change-validation, integration ]
     steps:
+      - name: Define release type
+        run: echo "IS_PRERELEASE=$(gh pr list -B main -l beta -s merged --json mergedAt -q='map(select((.mergedAt | fromdate | strftime("%Y-%m-%d")) == (now | strftime("%Y-%m-%d")))') | length > 0)" >> $GITHUB_ENV
       - uses: release-drafter/release-drafter@v6.0.0
         id: releaser
         with:
           prerelease-identifier: 'beta'
           publish: true
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
