@@ -19,6 +19,7 @@ categories:
       - 'dependencies'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&'
+include-pre-releases: true
 version-resolver:
   major:
     labels:
