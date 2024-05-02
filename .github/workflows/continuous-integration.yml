@@ -6,8 +6,10 @@ on:
   workflow_call:
     outputs:
       docker:
+        description: 'Docker images to build'
         value: ${{jobs.config.outputs.docker}}
       frontend:
+        description: 'Frontend location'
         value: ${{jobs.config.outputs.frontend}}
   pull_request:
   workflow_dispatch:
