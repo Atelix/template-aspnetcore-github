@@ -87,6 +87,7 @@ jobs:
           git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
     outputs:
       tag: ${{ steps.releaser.outputs.tag_name }}
+      isBeta: ${{ env.IS_PRERELEASE }}
   
   
   deploy:
@@ -118,8 +119,8 @@ jobs:
         with:
           context: ${{ matrix.context }}
           push: true
-          file: ${{ matrix.dockerfile }}
+          file: ${{ matrix.file }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:${{ needs.publish-release.outputs.tag }}
-            ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:latest
+            ${{ env.REGISTRY }}/${{ env.repository }}/${{ matrix.image }}:${{needs.publish-release.outputs.isBeta == 'true' && 'beta' || 'latest' }}
           labels: ${{ steps.meta.outputs.labels }}
