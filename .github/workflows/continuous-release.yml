@@ -75,6 +75,7 @@ jobs:
           node-version: 20
       - name: Set version
         run: |
+          echo ${{needs.intergation.outputs}}
           cd ${{needs.intergation.outputs.frontend}}
           npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
       - name: force update major tag
