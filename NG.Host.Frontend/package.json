@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "pinia": "^2.1.7",
-    "vue": "^3.4.25",
+    "vue": "^3.4.26",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.2",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.8",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
@@ -28,7 +28,7 @@
     "eslint-plugin-vue": "^9.25.0",
     "npm-run-all2": "^6.1.2",
     "typescript": "~5.4.5",
-    "vite": "^5.2.10",
-    "vue-tsc": "^2.0.14"
+    "vite": "^5.2.11",
+    "vue-tsc": "^2.0.16"
   }
 }

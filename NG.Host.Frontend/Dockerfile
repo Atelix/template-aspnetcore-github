@@ -1,5 +1,5 @@
 ﻿# Use Node.js 18 as the base image
-FROM node:21 AS Build
+FROM node:22 AS Build
 
 # Set the working directory
 WORKDIR /build
