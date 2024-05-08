@@ -103,6 +103,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.publish-release.outputs.tag }}
         name: Check out code
       - run: |
           echo "repository=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
