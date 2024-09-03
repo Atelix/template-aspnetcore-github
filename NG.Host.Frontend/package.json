@@ -24,7 +24,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-perfectionist": "^3.2.0",
+    "eslint-plugin-perfectionist": "^3.3.0",
     "eslint-plugin-vue": "^9.27.0",
     "npm-run-all2": "^6.2.2",
     "typescript": "~5.5.4",
