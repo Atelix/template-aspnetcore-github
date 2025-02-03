@@ -25,11 +25,11 @@ importers:
         specifier: ^20.1.2
         version: 20.1.4
       '@types/node':
-        specifier: ^22.10.2
-        version: 22.10.2
+        specifier: ^22.13.0
+        version: 22.13.0
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
-        version: 5.2.1(vite@6.0.7(@types/node@22.10.2))(vue@3.5.13(typescript@5.6.3))
+        version: 5.2.1(vite@6.0.7(@types/node@22.13.0))(vue@3.5.13(typescript@5.6.3))
       '@vue/eslint-config-typescript':
         specifier: ^13.0.0
         version: 13.0.0(eslint-plugin-vue@9.32.0(eslint@8.57.1))(eslint@8.57.1)(typescript@5.6.3)
@@ -53,7 +53,7 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^6.0.7
-        version: 6.0.7(@types/node@22.10.2)
+        version: 6.0.7(@types/node@22.13.0)
       vue-tsc:
         specifier: ^2.1.10
         version: 2.1.10(typescript@5.6.3)
@@ -369,8 +369,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@22.10.2':
-    resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
+  '@types/node@22.13.0':
+    resolution: {integrity: sha512-ClIbNe36lawluuvq3+YYhnIN2CELi+6q8NpnM7PYp4hBn/TatfboPgVSm2rwKRfnV2M+Ty9GWDFI64KEe+kysA==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -1409,7 +1409,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@22.10.2':
+  '@types/node@22.13.0':
     dependencies:
       undici-types: 6.20.0
 
@@ -1540,9 +1540,9 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-vue@5.2.1(vite@6.0.7(@types/node@22.10.2))(vue@3.5.13(typescript@5.6.3))':
+  '@vitejs/plugin-vue@5.2.1(vite@6.0.7(@types/node@22.13.0))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      vite: 6.0.7(@types/node@22.10.2)
+      vite: 6.0.7(@types/node@22.13.0)
       vue: 3.5.13(typescript@5.6.3)
 
   '@volar/language-core@2.4.8':
@@ -2226,13 +2226,13 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite@6.0.7(@types/node@22.10.2):
+  vite@6.0.7(@types/node@22.13.0):
     dependencies:
       esbuild: 0.24.2
       postcss: 8.4.49
       rollup: 4.24.0
     optionalDependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.13.0
       fsevents: 2.3.3
 
   vscode-uri@3.0.8: {}
